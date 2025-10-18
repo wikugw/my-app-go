@@ -10,7 +10,7 @@ import (
 func EmployeeRoutes(r *gin.Engine) {
 	// Middleware khusus employee routes
 	employeeGroup := r.Group("/employees")
-	employeeGroup.Use(middleware.Logger())
+	employeeGroup.Use(middleware.Logger()).Use(middleware.AuthMiddleware())
 	{
 		employeeGroup.POST("", handlers.CreateEmployeeHandler)
 		employeeGroup.GET("", handlers.GetEmployeeByEmailHandler)

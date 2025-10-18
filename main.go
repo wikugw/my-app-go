@@ -44,6 +44,7 @@ func main() {
 	r.Use(middleware.Logger())
 
 	// Register routes
+	routes.AuthRoutes(r)
 	routes.EmployeeRoutes(r)
 
 	// Swagger route
