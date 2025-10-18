@@ -27,5 +27,5 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway link --project <PROJECT_ID>
+          railway link --project ${{ secrets.PROJECT_ID }}
           railway up --service go-railway-example --detach
