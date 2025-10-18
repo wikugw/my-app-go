@@ -26,4 +26,6 @@ jobs:
       - name: Deploy using Railway CLI
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway up --service go-railway-example --detach
+        run: |
+          railway link --project <PROJECT_ID>
+          railway up --service go-railway-example --detach
