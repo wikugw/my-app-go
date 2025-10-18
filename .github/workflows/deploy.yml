@@ -9,15 +9,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Railway CLI
+        run: npm install -g @railway/cli
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.23'
-      - name: Build
+
+      - name: Build Go binary
         run: go build -o app ./cmd/main.go
-      - name: Deploy to Railway
-        uses: railwayapp/railway-action@v2
-        with:
-          serviceName: "go-railway-example"
-          railwayToken: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deploy using Railway CLI
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway up --service go-railway-example --detach
