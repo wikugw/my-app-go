@@ -39,13 +39,20 @@ func main() {
 	// Setup Gin
 	r := gin.Default()
 
+	r.SetTrustedProxies(nil)
+
 	r.Use(middleware.Logger())
 
 	// Register routes
 	routes.EmployeeRoutes(r)
 
 	// Swagger route
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	if gin.Mode() == gin.DebugMode {
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		log.Println("📘 Swagger enabled at /swagger/index.html")
+	} else {
+		log.Println("🚫 Swagger disabled in production")
+	}
 
 	// Run server
 	log.Println("🚀 Server running on :8080")
