@@ -24,9 +24,9 @@ func JSONResponse(c *gin.Context, code int, status, message string, data interfa
 // @Tags employees
 // @Accept json
 // @Produce json
-// @Param employee body services.CreateEmployeeRequest true "Employee info"
-// @Success 201 {object} Response
-// @Failure 400 {object} Response
+// @Param employee body employee.CreateEmployeeRequest true "Employee info"
+// @Success 201 {object} types.Response
+// @Failure 400 {object} types.Response
 // @Router /employees [post]
 func CreateEmployeeHandler(c *gin.Context) {
 	var req employee.CreateEmployeeRequest
@@ -54,9 +54,9 @@ func CreateEmployeeHandler(c *gin.Context) {
 // @Tags employees
 // @Produce json
 // @Param email query string true "Email of the employee"
-// @Success 200 {object} Response
-// @Failure 400 {object} Response
-// @Failure 404 {object} Response
+// @Success 200 {object} types.Response
+// @Failure 400 {object} types.Response
+// @Failure 404 {object} types.Response
 // @Router /employees [get]
 func GetEmployeeByEmailHandler(c *gin.Context) {
 	email := c.Query("email")

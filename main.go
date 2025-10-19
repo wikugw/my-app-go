@@ -12,8 +12,11 @@ import (
 
 	_ "my-app/docs"
 
+	"github.com/gin-contrib/cors"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+
+	"my-app/utils"
 )
 
 // @title My Employee API
@@ -39,9 +42,19 @@ func main() {
 	// Setup Gin
 	r := gin.Default()
 
+	// ✅ Tambahkan middleware CORS
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"}, // React app
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}))
+
 	r.SetTrustedProxies(nil)
 
 	r.Use(middleware.Logger())
+
+	utils.InitFirebase()
 
 	// Register routes
 	routes.AuthRoutes(r)

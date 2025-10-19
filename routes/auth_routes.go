@@ -7,6 +7,6 @@ import (
 )
 
 func AuthRoutes(r *gin.Engine) {
-	auth := r.Group("/api/auth")
+	auth := r.Group("/auth")
 	auth.POST("/google", handlers.GoogleLoginHandler)
 }
