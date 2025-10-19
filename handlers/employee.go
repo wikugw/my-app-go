@@ -3,21 +3,13 @@ package handlers
 import (
 	"net/http"
 
+	"my-app/helper"
 	"my-app/services"
 
+	employee "my-app/types/services"
+
 	"github.com/gin-gonic/gin"
-
-	"my-app/types"
-	"my-app/types/services/employee"
 )
-
-func JSONResponse(c *gin.Context, code int, status, message string, data interface{}) {
-	c.JSON(code, types.Response{
-		Status:  status,
-		Message: message,
-		Data:    data,
-	})
-}
 
 // @Summary Create a new employee
 // @Description Create employee with fullName, email, position, department
@@ -31,7 +23,7 @@ func JSONResponse(c *gin.Context, code int, status, message string, data interfa
 func CreateEmployeeHandler(c *gin.Context) {
 	var req employee.CreateEmployeeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		JSONResponse(c, http.StatusBadRequest, "error", "Invalid request body: "+err.Error(), nil)
+		helper.JSONResponse(c, http.StatusBadRequest, "error", "Invalid request body: "+err.Error(), nil)
 		return
 	}
 
@@ -39,14 +31,14 @@ func CreateEmployeeHandler(c *gin.Context) {
 	if err != nil {
 		switch err {
 		case services.ErrEmployeeExists:
-			JSONResponse(c, http.StatusConflict, "error", err.Error(), nil)
+			helper.JSONResponse(c, http.StatusConflict, "error", err.Error(), nil)
 		default:
-			JSONResponse(c, http.StatusInternalServerError, "error", "Failed to create employee", nil)
+			helper.JSONResponse(c, http.StatusInternalServerError, "error", "Failed to create employee", nil)
 		}
 		return
 	}
 
-	JSONResponse(c, http.StatusCreated, "success", "", employee)
+	helper.JSONResponse(c, http.StatusCreated, "success", "", employee)
 }
 
 // @Summary Get employee by email
@@ -61,7 +53,7 @@ func CreateEmployeeHandler(c *gin.Context) {
 func GetEmployeeByEmailHandler(c *gin.Context) {
 	email := c.Query("email")
 	if email == "" {
-		JSONResponse(c, http.StatusBadRequest, "error", "Email query param is required", nil)
+		helper.JSONResponse(c, http.StatusBadRequest, "error", "Email query param is required", nil)
 		return
 	}
 
@@ -69,12 +61,12 @@ func GetEmployeeByEmailHandler(c *gin.Context) {
 	if err != nil {
 		switch err {
 		case services.ErrEmployeeNotFound:
-			JSONResponse(c, http.StatusNotFound, "error", err.Error(), nil)
+			helper.JSONResponse(c, http.StatusNotFound, "error", err.Error(), nil)
 		default:
-			JSONResponse(c, http.StatusInternalServerError, "error", "Failed to fetch employee", nil)
+			helper.JSONResponse(c, http.StatusInternalServerError, "error", "Failed to fetch employee", nil)
 		}
 		return
 	}
 
-	JSONResponse(c, http.StatusOK, "success", "", employee)
+	helper.JSONResponse(c, http.StatusOK, "success", "", employee)
 }

@@ -77,6 +77,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/departments": {
+            "get": {
+                "description": "Retrieve a list of all departments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "departments"
+                ],
+                "summary": "Get all departments",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/employees": {
             "get": {
                 "description": "Get employee info by email query parameter",

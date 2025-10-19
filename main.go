@@ -4,7 +4,6 @@ import (
 	"log"
 	"my-app/database"
 	"my-app/middleware"
-	"my-app/models"
 	"my-app/routes"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +15,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
+	"my-app/migration"
 	"my-app/utils"
 )
 
@@ -34,10 +34,7 @@ func main() {
 	database.Connect()
 
 	// Auto-migrate models
-	if err := database.DB.AutoMigrate(&models.Employee{}); err != nil {
-		log.Fatalf("Failed to migrate: %v", err)
-	}
-	log.Println("🚀 Migration successful!")
+	migration.RunAll()
 
 	// Setup Gin
 	r := gin.Default()
@@ -59,6 +56,7 @@ func main() {
 	// Register routes
 	routes.AuthRoutes(r)
 	routes.EmployeeRoutes(r)
+	routes.DepartmentRoutes(r)
 
 	// Swagger route
 	if gin.Mode() == gin.DebugMode {

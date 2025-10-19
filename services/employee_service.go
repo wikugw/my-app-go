@@ -7,7 +7,7 @@ import (
 	"my-app/database"
 	"my-app/models"
 
-	"my-app/types/services/employee"
+	employee "my-app/types/services"
 
 	"github.com/lib/pq"
 	"gorm.io/gorm"
