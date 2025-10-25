@@ -23,7 +23,7 @@ type EmployeeService struct {
 	repo *repositories.EmployeeRepository
 }
 
-var EmployeeServiceInstance = NewEmployeeService(repositories.NewEmployeeRepository())
+var EmployeeServiceInstance *EmployeeService
 
 func NewEmployeeService(repo *repositories.EmployeeRepository) *EmployeeService {
 	return &EmployeeService{repo: repo}

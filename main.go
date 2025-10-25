@@ -4,7 +4,9 @@ import (
 	"log"
 	"my-app/database"
 	"my-app/middleware"
+	"my-app/repositories"
 	"my-app/routes"
+	"my-app/services"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -35,6 +37,10 @@ func main() {
 
 	// Auto-migrate models
 	migration.RunAll()
+
+	employeeRepo := repositories.NewEmployeeRepository(database.DB)
+	employeeService := services.NewEmployeeService(employeeRepo)
+	services.EmployeeServiceInstance = employeeService
 
 	// Setup Gin
 	r := gin.Default()

@@ -10,8 +10,8 @@ type EmployeeRepository struct {
 	db *gorm.DB
 }
 
-func NewEmployeeRepository() *EmployeeRepository {
-	return &EmployeeRepository{}
+func NewEmployeeRepository(db *gorm.DB) *EmployeeRepository {
+	return &EmployeeRepository{db: db}
 }
 
 func (r *EmployeeRepository) GetByEmail(email string) (*employee.EmployeeDetail, error) {
