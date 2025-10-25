@@ -9,7 +9,7 @@ type Employee struct {
 	Position         string    `gorm:"size:100"`
 	Department       string    `gorm:"size:100"`
 	HireDate         time.Time `gorm:"not null"`
-	EmploymentTypeID uint      `gorm:"not null"`
+	EmploymentTypeID *uint     `gorm:"column:employment_type_id"`
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 }
