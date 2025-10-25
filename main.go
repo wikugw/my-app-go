@@ -41,7 +41,7 @@ func main() {
 
 	// ✅ Tambahkan middleware CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"}, // React app
+		AllowOrigins:     []string{"http://localhost:5173", "https://my-app-b0511.web.app"}, // React app
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Authorization", "Content-Type"},
 		AllowCredentials: true,
