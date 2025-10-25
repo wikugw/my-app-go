@@ -6,11 +6,12 @@ import (
 
 	"my-app/database"
 	"my-app/models"
+	"my-app/repositories"
 
+	employeeRepo "my-app/types/repositories"
 	employee "my-app/types/services"
 
 	"github.com/lib/pq"
-	"gorm.io/gorm"
 )
 
 var (
@@ -18,15 +19,25 @@ var (
 	ErrEmployeeNotFound = errors.New("employee not found")
 )
 
+type EmployeeService struct {
+	repo *repositories.EmployeeRepository
+}
+
+var EmployeeServiceInstance = NewEmployeeService(repositories.NewEmployeeRepository())
+
+func NewEmployeeService(repo *repositories.EmployeeRepository) *EmployeeService {
+	return &EmployeeService{repo: repo}
+}
+
 func CreateEmployee(req employee.CreateEmployeeRequest) (*models.Employee, error) {
 	employee := models.Employee{
-		FullName:   req.FullName,
-		Email:      req.Email,
-		Position:   req.Position,
-		Department: req.Department,
-		HireDate:   time.Now(),
-		CreatedAt:  time.Now(),
-		UpdatedAt:  time.Now(),
+		FullName:         req.FullName,
+		Email:            req.Email,
+		DepartmentID:     req.DepartmentId,
+		EmploymentTypeID: req.EmploymentTypeId,
+		HireDate:         time.Now(),
+		CreatedAt:        time.Now(),
+		UpdatedAt:        time.Now(),
 	}
 
 	if err := database.DB.Create(&employee).Error; err != nil {
@@ -39,13 +50,6 @@ func CreateEmployee(req employee.CreateEmployeeRequest) (*models.Employee, error
 	return &employee, nil
 }
 
-func GetEmployeeByEmail(email string) (*models.Employee, error) {
-	var employee models.Employee
-	if err := database.DB.Where("email = ?", email).First(&employee).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, ErrEmployeeNotFound
-		}
-		return nil, err
-	}
-	return &employee, nil
+func (s *EmployeeService) GetEmployeeByEmail(email string) (*employeeRepo.EmployeeDetail, error) {
+	return s.repo.GetByEmail(email)
 }

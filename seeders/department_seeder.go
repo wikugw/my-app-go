@@ -6,16 +6,17 @@ import (
 )
 
 func SeedDepartments() {
-	// Hapus semua data department
-	database.DB.Exec("DELETE FROM departments")
+	db := database.DB
 
-	// Insert data baru sekaligus
-	dummyDepartments := []models.Department{
-		{Name: "HR"},
-		{Name: "Finance"},
-		{Name: "IT"},
-		{Name: "Marketing"},
+	// Hapus semua data dulu
+	db.Exec("DELETE FROM departments")
+
+	departments := []models.Department{
+		{ID: 1, Name: "HR"},
+		{ID: 2, Name: "Finance"},
+		{ID: 3, Name: "IT"},
+		{ID: 4, Name: "Marketing"},
 	}
 
-	database.DB.Create(&dummyDepartments)
+	db.Create(&departments)
 }

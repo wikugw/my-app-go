@@ -20,5 +20,6 @@ func RunAll() {
 
 	seeders.SeedDepartments()
 	seeders.SeedEmploymentType()
+	seeders.SeedEmployee()
 	log.Println("🚀 Migration successful!")
 }

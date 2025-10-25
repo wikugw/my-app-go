@@ -11,9 +11,9 @@ func SeedEmploymentType() {
 
 	// Insert data baru sekaligus
 	dummyEmploymentTypes := []models.EmploymentType{
-		{Name: "Full Time"},
-		{Name: "Contract"},
-		{Name: "Part Time"},
+		{ID: 1, Name: "Full Time"},
+		{ID: 2, Name: "Contract"},
+		{ID: 3, Name: "Part Time"},
 	}
 
 	database.DB.Create(&dummyEmploymentTypes)

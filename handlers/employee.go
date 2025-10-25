@@ -57,7 +57,7 @@ func GetEmployeeByEmailHandler(c *gin.Context) {
 		return
 	}
 
-	employee, err := services.GetEmployeeByEmail(email)
+	employee, err := services.EmployeeServiceInstance.GetEmployeeByEmail(email)
 	if err != nil {
 		switch err {
 		case services.ErrEmployeeNotFound:
