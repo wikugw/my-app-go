@@ -181,6 +181,32 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/employment-types": {
+            "get": {
+                "description": "Retrieve a list of all employment types",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employment-types"
+                ],
+                "summary": "Get all employment types",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

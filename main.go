@@ -57,6 +57,7 @@ func main() {
 	routes.AuthRoutes(r)
 	routes.EmployeeRoutes(r)
 	routes.DepartmentRoutes(r)
+	routes.EmploymentTypeRoutes(r)
 
 	// Swagger route
 	if gin.Mode() == gin.DebugMode {

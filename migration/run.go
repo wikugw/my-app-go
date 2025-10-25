@@ -10,12 +10,15 @@ import (
 func RunAll() {
 
 	if err := database.DB.AutoMigrate(
+		&models.EmploymentType{},
 		&models.Employee{},
 		&models.Department{},
+		&models.Recruitment{},
 	); err != nil {
 		log.Fatalf("Failed to migrate: %v", err)
 	}
 
 	seeders.SeedDepartments()
+	seeders.SeedEmploymentType()
 	log.Println("🚀 Migration successful!")
 }
