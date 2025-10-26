@@ -9,10 +9,14 @@ import (
 
 func RunAll() {
 
+	db := database.DB
+	db.Exec("DROP TABLE RECRUITMENTS")
+
 	if err := database.DB.AutoMigrate(
 		&models.EmploymentType{},
 		&models.Employee{},
 		&models.Department{},
+		&models.Requirement{},
 		&models.Recruitment{},
 	); err != nil {
 		log.Fatalf("Failed to migrate: %v", err)

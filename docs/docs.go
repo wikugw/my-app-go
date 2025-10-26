@@ -207,6 +207,52 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/recruitments": {
+            "post": {
+                "description": "Add a new recruitment posting with requirements",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "recruitment"
+                ],
+                "summary": "Create a new recruitment",
+                "parameters": [
+                    {
+                        "description": "Recruitment data",
+                        "name": "recruitment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateRecruitmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -217,17 +263,53 @@ const docTemplate = `{
                 "fullName"
             ],
             "properties": {
-                "department": {
-                    "type": "string"
+                "departmentId": {
+                    "type": "integer"
                 },
                 "email": {
                     "type": "string"
                 },
+                "employementTypeId": {
+                    "type": "integer"
+                },
                 "fullName": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.CreateRecruitmentRequest": {
+            "type": "object",
+            "required": [
+                "applicationDates",
+                "createdById",
+                "employementType",
+                "position",
+                "salary"
+            ],
+            "properties": {
+                "applicationDates": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "createdById": {
+                    "type": "integer"
+                },
+                "employementType": {
                     "type": "string"
                 },
                 "position": {
                     "type": "string"
+                },
+                "requirements": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "salary": {
+                    "type": "number"
                 }
             }
         },

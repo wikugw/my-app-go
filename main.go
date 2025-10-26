@@ -64,6 +64,7 @@ func main() {
 	routes.EmployeeRoutes(r)
 	routes.DepartmentRoutes(r)
 	routes.EmploymentTypeRoutes(r)
+	routes.RecruitmentRoutes(r)
 
 	// Swagger route
 	if gin.Mode() == gin.DebugMode {
