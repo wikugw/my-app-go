@@ -9,9 +9,6 @@ import (
 
 func RunAll() {
 
-	db := database.DB
-	db.Exec("DROP TABLE RECRUITMENTS")
-
 	if err := database.DB.AutoMigrate(
 		&models.EmploymentType{},
 		&models.Employee{},
