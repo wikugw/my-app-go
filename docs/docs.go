@@ -253,6 +253,65 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/recruitments/active": {
+            "get": {
+                "description": "Returns a list of active recruitments where current date is between application_start_date and application_end_date.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruitments"
+                ],
+                "summary": "Get active recruitments by current date",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Current date in RFC3339 format (e.g. 2025-10-28T00:00:00Z)",
+                        "name": "currentDate",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of active recruitments",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/types.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/handlers.RecruitmentResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid currentDate parameter",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -269,7 +328,7 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "employementTypeId": {
+                "employmentTypeId": {
                     "type": "integer"
                 },
                 "fullName": {
@@ -282,7 +341,7 @@ const docTemplate = `{
             "required": [
                 "applicationDates",
                 "createdById",
-                "employementType",
+                "employmentType",
                 "position",
                 "salary"
             ],
@@ -296,7 +355,7 @@ const docTemplate = `{
                 "createdById": {
                     "type": "integer"
                 },
-                "employementType": {
+                "employmentType": {
                     "type": "string"
                 },
                 "position": {
@@ -321,6 +380,45 @@ const docTemplate = `{
             "properties": {
                 "idToken": {
                     "type": "string"
+                }
+            }
+        },
+        "handlers.RecruitmentResponse": {
+            "type": "object",
+            "required": [
+                "applicationDates",
+                "createdBy",
+                "employmentType",
+                "position",
+                "salary"
+            ],
+            "properties": {
+                "applicationDates": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "createdBy": {
+                    "type": "string"
+                },
+                "employmentType": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "requirements": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "salary": {
+                    "type": "number"
                 }
             }
         },

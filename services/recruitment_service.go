@@ -4,6 +4,7 @@ import (
 	"my-app/models"
 	"my-app/repositories"
 	"my-app/types/handlers"
+	"time"
 )
 
 func CreateRecruitment(r *handlers.RecruitmentParam) error {
@@ -26,4 +27,8 @@ func CreateRecruitment(r *handlers.RecruitmentParam) error {
 	}
 
 	return repositories.CreateRecruitment(&recruitment, requirements)
+}
+
+func GetActiveRecruitments(date time.Time) ([]handlers.RecruitmentResponse, error) {
+	return repositories.GetActiveRecruitments(date)
 }

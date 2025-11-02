@@ -22,3 +22,16 @@ type RecruitmentParam struct {
 	CreatedByID          *uint      `gorm:"column:created_by_id"`
 	Requirements         []string
 }
+
+type RecruitmentResponse struct {
+	ID                   uint      `json:"id"`
+	Position             string    `json:"position"`
+	Salary               float64   `json:"salary"`
+	EmploymentType       string    `json:"employmentType"`
+	ApplicationStartDate time.Time `json:"-"` // hidden in JSON
+	ApplicationEndDate   time.Time `json:"-"` // hidden in JSON
+	ApplicationDates     []string  `json:"applicationDates"`
+	Requirements         []string  `json:"requirements"`
+	CreatedBy            string    `json:"createdBy"`
+	CreatedAt            string    `json:"createdAt"`
+}

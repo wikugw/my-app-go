@@ -9,6 +9,7 @@ import (
 	"my-app/services"
 	handlerTypes "my-app/types/handlers"
 
+	"github.com/araddon/dateparse"
 	"github.com/gin-gonic/gin"
 )
 
@@ -89,4 +90,37 @@ func CreateRecruitmentHandler(c *gin.Context) {
 
 	fmt.Println("✅ Recruitment created successfully:", recruitment)
 	helper.JSONResponse(c, http.StatusCreated, "success", "Recruitment created successfully", recruitment)
+}
+
+// GetActiveRecruitmentsHandler godoc
+// @Summary      Get active recruitments by current date
+// @Description  Returns a list of active recruitments where current date is between application_start_date and application_end_date.
+// @Tags         Recruitments
+// @Accept       json
+// @Produce      json
+// @Param        currentDate   query     string  true  "Current date in RFC3339 format (e.g. 2025-10-28T00:00:00Z)"
+// @Success      200  {object}  types.Response{data=[]handlers.RecruitmentResponse}  "List of active recruitments"
+// @Failure      400  {object}  types.Response  "Missing or invalid currentDate parameter"
+// @Failure      500  {object}  types.Response  "Internal server error"
+// @Router       /recruitments/active [get]
+func GetActiveRecruitmentsHandler(c *gin.Context) {
+	dateRequest := c.Query("currentDate")
+	if dateRequest == "" {
+		helper.JSONResponse(c, http.StatusBadRequest, "error", "currentDate query param is required", nil)
+		return
+	}
+
+	currentDate, dateError := dateparse.ParseAny(dateRequest)
+
+	if dateError != nil {
+		helper.JSONResponse(c, http.StatusInternalServerError, "error", "Failed to fetch recruitments", dateError)
+		return
+	}
+
+	recruitments, err := services.GetActiveRecruitments(currentDate)
+	if err != nil {
+		helper.JSONResponse(c, http.StatusInternalServerError, "error", "Failed to fetch recruitments", err)
+		return
+	}
+	helper.JSONResponse(c, http.StatusOK, "success", "", recruitments)
 }
