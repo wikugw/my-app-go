@@ -32,3 +32,7 @@ func CreateRecruitment(r *handlers.RecruitmentParam) error {
 func GetActiveRecruitments(date time.Time) ([]handlers.RecruitmentResponse, error) {
 	return repositories.GetActiveRecruitments(date)
 }
+
+func GetRecruitmentById(id uint) (*handlers.RecruitmentResponse, error) {
+	return repositories.GetRecruitmentByID(id)
+}

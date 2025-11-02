@@ -209,6 +209,66 @@ const docTemplate = `{
             }
         },
         "/recruitments": {
+            "get": {
+                "description": "Retrieve a single recruitment record based on its ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recruitments"
+                ],
+                "summary": "Get recruitment by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Recruitment ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Recruitment detail",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/types.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/handlers.RecruitmentResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid ID parameter",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Recruitment not found",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Add a new recruitment posting with requirements",
                 "consumes": [
@@ -385,19 +445,15 @@ const docTemplate = `{
         },
         "handlers.RecruitmentResponse": {
             "type": "object",
-            "required": [
-                "applicationDates",
-                "createdBy",
-                "employmentType",
-                "position",
-                "salary"
-            ],
             "properties": {
                 "applicationDates": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
+                },
+                "createdAt": {
+                    "type": "string"
                 },
                 "createdBy": {
                     "type": "string"

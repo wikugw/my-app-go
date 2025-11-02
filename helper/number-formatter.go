@@ -4,14 +4,10 @@ import (
 	"strconv"
 )
 
-func StringToUintPtr(s string) (*uint, error) {
-	if s == "" {
-		return nil, nil
-	}
-	val, err := strconv.ParseUint(s, 10, 64)
+func StringToUint(s string) (uint, error) {
+	n, err := strconv.ParseUint(s, 10, 64)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
-	u := uint(val)
-	return &u, nil
+	return uint(n), nil
 }

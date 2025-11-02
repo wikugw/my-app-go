@@ -14,5 +14,6 @@ func RecruitmentRoutes(r *gin.Engine) {
 	{
 		deptGroup.POST("", handlers.CreateRecruitmentHandler)
 		deptGroup.GET("/active", handlers.GetActiveRecruitmentsHandler)
+		deptGroup.GET("/:id", handlers.GetRecruitmentById)
 	}
 }

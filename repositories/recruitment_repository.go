@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"my-app/database"
 	"my-app/models"
 	"my-app/types/handlers"
@@ -8,6 +9,34 @@ import (
 
 	"gorm.io/gorm"
 )
+
+func GetRecruitments[T any](whereClause string, args ...interface{}) ([]T, error) {
+	var results []T
+	db := database.DB
+
+	err := db.Table("recruitments").
+		Select(`
+			recruitments.id,
+			departments.name AS position,
+			recruitments.salary,
+			employment_types.name AS employment_type,
+			recruitments.application_start_date,
+			recruitments.application_end_date,
+			employees.email AS created_by,
+			recruitments.created_at
+		`).
+		Joins("LEFT JOIN departments ON departments.id = recruitments.department_id").
+		Joins("LEFT JOIN employment_types ON employment_types.id = recruitments.employment_type_id").
+		Joins("LEFT JOIN employees ON employees.id = recruitments.created_by_id").
+		Where(whereClause, args...).
+		Find(&results).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
 
 func CreateRecruitment(recruitment *models.Recruitment, requirements []models.Requirement) error {
 	db := database.DB
@@ -35,36 +64,21 @@ func CreateRecruitment(recruitment *models.Recruitment, requirements []models.Re
 }
 
 func GetActiveRecruitments(date time.Time) ([]handlers.RecruitmentResponse, error) {
-	db := database.DB
 	var recruitments []handlers.RecruitmentResponse
 
-	err := db.Table("recruitments").
-		Select(`
-			recruitments.id,
-			departments.name AS position,
-			recruitments.salary,
-			employment_types.name AS employment_type,
-			recruitments.application_start_date,
-			recruitments.application_end_date,
-			employees.email AS created_by,
-			recruitments.created_at
-		`).
-		Joins("LEFT JOIN departments ON departments.id = recruitments.department_id").
-		Joins("LEFT JOIN employment_types ON employment_types.id = recruitments.employment_type_id").
-		Joins("LEFT JOIN employees ON employees.id = recruitments.created_by_id").
-		Where("recruitments.application_start_date <= ? AND recruitments.application_end_date >= ?", date, date).
-		Find(&recruitments).Error
-
+	recruitments, err := GetRecruitments[handlers.RecruitmentResponse](
+		"recruitments.application_start_date <= ? AND recruitments.application_end_date >= ?",
+		date, date,
+	)
 	if err != nil {
 		return nil, err
 	}
 
 	for i := range recruitments {
 		// Ambil requirements
-		var reqs []string
-		if errReq := db.Table("requirements").
-			Where("recruitment_id = ?", recruitments[i].ID).
-			Pluck("description", &reqs).Error; errReq != nil {
+		var reqs, errReq = GetRequirementByRecruitmentId(recruitments[i].ID)
+
+		if errReq != nil {
 			return nil, errReq
 		}
 		recruitments[i].Requirements = reqs
@@ -77,4 +91,32 @@ func GetActiveRecruitments(date time.Time) ([]handlers.RecruitmentResponse, erro
 	}
 
 	return recruitments, nil
+}
+
+func GetRecruitmentByID(id uint) (*handlers.RecruitmentResponse, error) {
+	recs, err := GetRecruitments[handlers.RecruitmentResponse](
+		"recruitments.id = ?",
+		id,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(recs) == 0 {
+		return nil, fmt.Errorf("recruitment not found")
+	}
+
+	var reqs, errReq = GetRequirementByRecruitmentId(recs[0].ID)
+
+	if errReq != nil {
+		return nil, errReq
+	}
+
+	recs[0].Requirements = reqs
+	recs[0].ApplicationDates = []string{
+		recs[0].ApplicationStartDate.Format("2006-01-02"),
+		recs[0].ApplicationEndDate.Format("2006-01-02"),
+	}
+
+	return &recs[0], nil
 }

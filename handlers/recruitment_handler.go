@@ -34,14 +34,14 @@ func CreateRecruitmentHandler(c *gin.Context) {
 	fmt.Printf("📥 Incoming request: %+v\n", req)
 
 	// Konversi dan validasi ID
-	deptID, err := helper.StringToUintPtr(req.Position)
+	deptID, err := helper.StringToUint(req.Position)
 	if err != nil {
 		fmt.Println("❌ Invalid position ID:", err)
 		helper.JSONResponse(c, http.StatusBadRequest, "error", "Invalid department ID", nil)
 		return
 	}
 
-	employmentTypeID, err := helper.StringToUintPtr(req.EmploymentType)
+	employmentTypeID, err := helper.StringToUint(req.EmploymentType)
 	if err != nil {
 		fmt.Println("❌ Invalid employment type ID:", err)
 		helper.JSONResponse(c, http.StatusBadRequest, "error", "Invalid employment type ID", nil)
@@ -78,7 +78,7 @@ func CreateRecruitmentHandler(c *gin.Context) {
 		EmploymentTypeID:     employmentTypeID,
 		ApplicationStartDate: startDate,
 		ApplicationEndDate:   endDate,
-		CreatedByID:          &req.CreatedByID,
+		CreatedByID:          req.CreatedByID,
 		Requirements:         req.Requirements,
 	}
 
@@ -123,4 +123,38 @@ func GetActiveRecruitmentsHandler(c *gin.Context) {
 		return
 	}
 	helper.JSONResponse(c, http.StatusOK, "success", "", recruitments)
+}
+
+// GetRecruitmentById godoc
+// @Summary      Get recruitment by ID
+// @Description  Retrieve a single recruitment record based on its ID.
+// @Tags         Recruitments
+// @Accept       json
+// @Produce      json
+// @Param        id   query     uint   true  "Recruitment ID"
+// @Success      200  {object}  types.Response{data=handlers.RecruitmentResponse}  "Recruitment detail"
+// @Failure      400  {object}  types.Response  "Missing or invalid ID parameter"
+// @Failure      404  {object}  types.Response  "Recruitment not found"
+// @Failure      500  {object}  types.Response  "Internal server error"
+// @Router       /recruitments [get]
+func GetRecruitmentById(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		helper.JSONResponse(c, http.StatusBadRequest, "error", "id query param is required", nil)
+		return
+	}
+
+	formatId, err := helper.StringToUint(id)
+	if err != nil {
+		helper.JSONResponse(c, http.StatusBadRequest, "error", "invalid id format", nil)
+		return
+	}
+
+	recruitment, err := services.GetRecruitmentById(formatId)
+	if err != nil {
+		helper.JSONResponse(c, http.StatusNotFound, "error", err.Error(), nil)
+		return
+	}
+
+	helper.JSONResponse(c, http.StatusOK, "success", "", recruitment)
 }
